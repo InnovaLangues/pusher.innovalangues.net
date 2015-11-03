@@ -5,9 +5,13 @@
 
         // Controller
         .controller("LoginController", function(
+            $rootScope, 
             $scope, 
             myAuthService
         ){       
+            $rootScope.bodyClass = 'login-page';
+            console.log($rootScope.bodyClass);
+
             $scope.login = function(user){
                 myAuthService.login(user);
             }

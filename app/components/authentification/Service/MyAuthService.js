@@ -40,6 +40,7 @@
                         
                         // Delete user from local storage.
                         delete $localStorage.user.username;
+                        delete $localStorage.user
 
                         // Change state to login.
                         $state.go('login');
@@ -112,6 +113,7 @@
                         // GENERATE Fake date for user
                         $http.get('https://randomuser.me/api/').then(function(response){
                             var fakeUser = response.data.results[0].user;
+                            $localStorage.user = {};
                             $localStorage.user.firstname = fakeUser.name.first;
                             $localStorage.user.lastname = fakeUser.name.last;
                             $localStorage.user.avatar = fakeUser.picture.thumbnail;
