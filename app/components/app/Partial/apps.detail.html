@@ -1,0 +1,94 @@
+<section class="content-header">
+    <h1>
+        {{app.slug}}
+    </h1>
+    <ol class="breadcrumb">
+        <li>
+            <a ui-sref="apps.list"><i class="fa fa-dashboard"></i> Home</a>
+        </li>
+        <li>
+            <a ui-sref="apps.list"><i class="fa fa-cloud"></i> Apps</a>
+        </li>
+        <li class="active">{{app.slug}}</li>
+    </ol>
+</section>
+<section class="content">
+	<div class="box">
+		<div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-cloud"></i> Details</h3>
+        </div>
+		<div class="box-body">
+			<ul>
+			    <li>
+			    	<code>
+			    		app_id = {{app.guid}}
+			    	</code>
+			    </li>
+			    <li>Name : {{app.slug}}</li>
+			</ul>
+		</div>
+		<div class="box-header with-border">
+          <h3 class="box-title"><i class="fa fa-key"></i> Access Tokens</h3>
+        </div>
+		<div class="box-body">
+			<p>If a token becomes compromised, you can create a new key/secret pair. You will be able to delete the old token when you've updated your app.</p>
+			<p>You have more than one active token. When you have replaced all references to the old token from your code you should delete the older token.</p>
+			<table class="table">
+				<tr>
+					<th>Token</th>
+					<th>Created</th>
+					<th>Action</th>
+				</tr>
+
+				<tr ng-repeat="token in tokens">
+					<td>
+						<code>
+							key = '{{token.key}}' </br>
+							secret='{{token.secret}}'
+						</code>
+					</td>
+					<td>3 months ago</td>
+					<td><a href="#">Delete</a></td>
+				</tr>
+			</table>
+			<a href="#" ng-click="addToken()" class="btn primary-btn">Add token</a>
+			<div>{{tokens}}</div>
+		</div>
+		<div class="box-header with-border">
+          	<h3 class="box-title"><i class="fa fa-cloud"></i> Code examples</h3>
+        </div>
+		<div class="box-body">
+			<h3>Client side</h3>
+			<pre>&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+  &lt;title&gt;Pusher Test&lt;/title&gt;
+  &lt;script src="https://js.pusher.com/3.0/pusher.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
+
+    var pusher = new Pusher('40ea804fae1295d1faf1', {
+      encrypted: true
+    });
+    var channel = pusher.subscribe('test_channel');
+    channel.bind('my_event', function(data) {
+      alert(data.message);
+    });
+  &lt;/script&gt;
+&lt;/head&gt;</pre>
+			<h3>Server side</h3>
+			<h4>PHP</h4>
+			<pre>require 'pusher'
+
+Pusher.url = "https://40ea804fae1295d1faf1:36e4784f3390c7f48593@api.pusherapp.com/apps/118326"
+
+Pusher.trigger('test_channel', 'my_event', {
+  message: 'hello world'
+})</pre>
+		</div>
+	</div>
+</section>
