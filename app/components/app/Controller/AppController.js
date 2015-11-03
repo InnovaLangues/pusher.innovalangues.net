@@ -10,62 +10,48 @@
             	'$scope', 
             	'$stateParams', 
             	'Restangular',
-                'TokenService',
+                'Tokens',
+                'Apps',
             	function(
             		$scope, 
             		$stateParams,
             		Restangular,
-                    TokenService
+                    Tokens,
+                    Apps
             	) {
-                    var baseApp = Restangular.one('apps', $stateParams.appGuid);
-
-                    baseApp.get().then(function(app) {
-                      $scope.app = app;
+                    Apps.get($stateParams.appGuid).then(function(data){
+                        $scope.app = data;
                     });
 
-                    $scope.addToken = TokenService.addToken;
+                    var token = {
+                        key: 111,
+                        secret: 222
+                    }
 
-                    $scope.tokens = TokenService.list;
-                    //console.dir(TokenService);
+                    $scope.addToken = console.log('added token');
+                    //Tokens.post(token);
+
+                    //$scope.addToken = TokenService.addToken;
+
+                    //$scope.tokens = TokenService.list;
                 }
             ]
         ).factory(
-            'TokenService',
+            'Apps', 
             [
                 'Restangular',
                 function(Restangular)
                 {
-                    var factory = {};
-
-                    
-                        factory.list = [
-                            {
-                                key: "toto",
-                                secret: "titi"
-                            },
-                            {
-                                key: "tutu",
-                                secret: "kiki"
-                            }
-                        ];
-
-                        factory.addToken = function() {
-                            factory.list.push({
-                                key: "tata",
-                                secret: "tsts"
-                            });
-                        };
-
-                        factory.getTokens = function() {
-                            var baseApp = Restangular.one('apps', $stateParams.appGuid);
-
-                            baseApp.get().then(function(tokens) {
-                              factory.list = tokens;
-                            });
-                        };
-                   
-                    //console.dir(factory);
-                    return factory;
+                    return Restangular.service('apps');
+                }
+            ]
+        ).factory(
+            'Tokens',
+            [
+                'Restangular',
+                function(Restangular)
+                {
+                    return Restangular.service('tokens');
                 }
             ]
         );

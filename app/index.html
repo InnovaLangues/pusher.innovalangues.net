@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="bower_components/angular-loading-bar/src/loading-bar.css">
     <link rel="stylesheet" href="bower_components/AdminLTE/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="bower_components/AdminLTE/dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="bower_components/AdminLTE/plugins/iCheck/square/blue.css">
     <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
     <link rel="stylesheet" href="app.css">
@@ -28,14 +29,13 @@
     <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <!-- Start body -->
-<body class="skin-blue">
+<body class="skin-blue {{bodyClass}}">
 <!-- waiting-for-angular  -->
     <!--[if lt IE 7]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div ui-view></div>
     
-
     <!-- Underscore -->
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 
@@ -56,12 +56,17 @@
 
     <!-- Angular plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.3.1/restangular.min.js"></script>
     <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
     <script src="bower_components/angular-loading-bar/src/loading-bar.js"></script>
     <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/restangular/src/restangular.js"></script>
+
+    <!-- AdminLTE -->
     <script src="bower_components/AdminLTE/dist/js/app.min.js"></script>
+
+    <!-- AdminLTE Plugins-->
+    <script src="bower_components/AdminLTE/plugins/iCheck/icheck.min.js"></script>
 
     <script src="bower_components/angular-permission/dist/angular-permission.js"></script>
     <script src="bower_components/ngstorage/ngStorage.min.js"></script>
@@ -97,5 +102,16 @@
     <script src="components/app/module.js"></script>
     <script src="components/app/Controller/AppsController.js"></script>
     <script src="components/app/Controller/AppController.js"></script>
+
+
+    <script>
+      $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' // optional
+        });
+      });
+    </script>
 </body>
 </html>
