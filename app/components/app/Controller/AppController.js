@@ -20,6 +20,7 @@
                     Apps
             	) {
                     Apps.get($stateParams.appGuid).then(function(data){
+                        console.log(data);
                         $scope.app = data;
                     });
 
@@ -28,13 +29,19 @@
                         secret: 222
                     }
 
-                    $scope.addToken = console.log('added token');
+                    $scope.addToken = function() {
+                        console.log(Apps.one($stateParams.appGuid).all('tokens'));
+                        Apps.one($stateParams.appGuid).all('tokens').post(token);
+                    }
+
+                    //$scope.addToken = console.log('added token');
                     //Tokens.post(token);
 
                     //$scope.addToken = TokenService.addToken;
 
                     //$scope.tokens = TokenService.list;
                 }
+
             ]
         ).factory(
             'Apps', 
