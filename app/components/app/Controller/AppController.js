@@ -10,36 +10,34 @@
             	'$scope', 
             	'$stateParams', 
             	'Restangular',
+                'Notification',
                 'Tokens',
                 'Apps',
             	function(
             		$scope, 
             		$stateParams,
-            		Restangular,
+                    Restangular,
+                    Notification,
                     Tokens,
                     Apps
             	) {
                     Apps.get($stateParams.appGuid).then(function(data){
-                        console.log(data);
                         $scope.app = data;
                     });
 
-                    var token = {
-                        key: 111,
-                        secret: 222
-                    }
-
                     $scope.addToken = function() {
-                        console.log(Apps.one($stateParams.appGuid).all('tokens'));
-                        Apps.one($stateParams.appGuid).all('tokens').post(token);
+                        Apps.one($stateParams.appGuid).all('tokens').post().then(function(data) {
+                            $scope.app = data;
+                            Notification.success('You have added a new token');
+                        });
                     }
 
-                    //$scope.addToken = console.log('added token');
-                    //Tokens.post(token);
-
-                    //$scope.addToken = TokenService.addToken;
-
-                    //$scope.tokens = TokenService.list;
+                    $scope.deleteToken = function(key) {
+                        Apps.one($stateParams.appGuid).all('tokens').one(key).remove().then(function(data){
+                            $scope.app = data;
+                            Notification.success('You have deleted a token');
+                        });
+                    }
                 }
 
             ]

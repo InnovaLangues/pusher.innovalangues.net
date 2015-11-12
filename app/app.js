@@ -19,7 +19,10 @@
         'ui.router',
         'http-auth-interceptor',
         'ngStorage',
-        'permission'
+        'ngSanitize',
+        'permission',
+        'angularMoment',
+        'mwl.confirm'
     ]
 
     // Declare app level module which depends on views, and components
