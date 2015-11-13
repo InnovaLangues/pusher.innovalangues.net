@@ -129,6 +129,30 @@
             }
         })
 
+        .directive('prettify', ['$compile', '$timeout', function ($compile, $timeout) {
+            return {
+                restrict: 'E',
+                scope: {
+                    target: '='
+                },
+                link: function (scope, element, attrs) {
+                    var template = element.html();
+                    var templateFn = $compile(template);
+                    var update = function(){
+                        $timeout(function () {
+                            var compiled = templateFn(scope).html();
+                            var prettified = prettyPrintOne(compiled);
+                            element.html(prettified);
+                        }, 0);
+                    }
+                    scope.$watch('target', function () {
+                        update();
+                    }, true);
+                    update();
+                }
+            }
+        }])
+
         .run(
             function($rootScope, $state, $stateParams, $localStorage, Permission) {
                 $rootScope.$state = $state;

@@ -13,60 +13,33 @@
     </ol>
 </section>
 <section class="content">
-	<div class="box">
-		<div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-cloud"></i> Details</h3>
-        </div>
-		<div class="box-body">
-			<ul>
-			    <li>
-			    	<code>
-			    		app_id = {{app.guid}}
-			    	</code>
-			    </li>
-			    <li>Name : {{app.slug}}</li>
-			</ul>
-		</div>
-	</div>
-	<div class="box">
-		<div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-key"></i> Access Tokens</h3>
-        </div>
-		<div class="box-body">
-			<p>If a token becomes compromised, you can create a new key/secret pair. You will be able to delete the old token when you've updated your app.</p>
-			<p>You have more than one active token. When you have replaced all references to the old token from your code you should delete the older token.</p>
-
-			<table class="table">
-				<tr>
-					<th>Token</th>
-					<th>Created</th>
-					<th>Action</th>
-				</tr>
-
-				<tr ng-repeat="token in app.tokens">
-					<td>
-						<code>
-							key = '{{token.key}}' </br>
-							secret = '{{token.secret}}'
-						</code>
-					</td>
-					<td><span am-time-ago="token.created"></span></td>
-					<td><a mwl-confirm title="Delete token" message="Are you sure you want to delete this token ?" on-confirm="deleteToken(token.key)" confirm-button-type="danger" href="#">Delete</a></td>
-				</tr>
-			</table>
-
-		</div>
-		<div class="box-footer">
-			<button ng-click="addToken()" class="btn btn-primary">Add token</button>
-		</div>
-	</div>
-	<div class="box">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="box">
+				<div class="box-header with-border">
+		          <h3 class="box-title"><i class="fa fa-cloud"></i> Details</h3>
+		        </div>
+				<div class="box-body">
+					<ul>
+					    <li>
+					    	<code>
+					    		app_id = {{app.guid}}
+					    	</code>
+					    </li>
+					    <li>Name : {{app.slug}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="box">
 		<div class="box-header with-border">
           	<h3 class="box-title"><i class="fa fa-cloud"></i> Code examples</h3>
         </div>
 		<div class="box-body">
 			<h3>Client side</h3>
-			<pre>&lt;!DOCTYPE html&gt;
+			<uib-tabset class="nav-tabs-custom">
+				<uib-tab heading="Javascript">	
+<pre class="prettyprint lang-html">
+&lt;!DOCTYPE html&gt;
 &lt;head&gt;
   &lt;title&gt;Pusher Test&lt;/title&gt;
   &lt;script src="https://js.pusher.com/3.0/pusher.min.js"&gt;&lt;/script&gt;
@@ -86,7 +59,13 @@
       alert(data.message);
     });
   &lt;/script&gt;
-&lt;/head&gt;</pre>
+&lt;/head&gt;
+</pre>
+				</uib-tab>
+				<uib-tab heading="iOS">TODO</uib-tab>
+				<uib-tab heading="Android">TODO</uib-tab>
+			</uib-tabset>
+
 			<h3>Server side</h3>
 			<h4>PHP</h4>
 			<pre>require 'pusher'
@@ -96,6 +75,42 @@ Pusher.url = "https://40ea804fae1295d1faf1:36e4784f3390c7f48593@api.pusherapp.co
 Pusher.trigger('test_channel', 'my_event', {
   message: 'hello world'
 })</pre>
+		</div>
+	</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="box">
+				<div class="box-header with-border">
+		          <h3 class="box-title"><i class="fa fa-key"></i> Access Tokens</h3>
+		        </div>
+				<div class="box-body">
+					<p>If a token becomes compromised, you can create a new key/secret pair. You will be able to delete the old token when you've updated your app.</p>
+					<div ng-if="app.tokens.length > 1" class="callout callout-info">
+						<p>You have more than one active token. When you have replaced all references to the old token from your code you should delete the older token.</p>
+					</div>
+					<div ng-repeat="token in app.tokens">
+
+					<prettify target="organization">
+						<pre>
+							<code class="prettyprint lang-js">console.log('{{target.message}}');</code>
+				        </pre>
+				    </prettify>
+
+
+<pre class="prettyprint">
+&lt;h1&gt;gg&lt;/h1&gt;
+key = '{{token.key}}'
+secret = '{{token.secret}}'
+</pre>
+						Token created <span am-time-ago="token.created"></span> (<a ng-if="app.tokens.length > 1" mwl-confirm title="Delete token" message="Are you sure you want to delete this token ?" on-confirm="deleteToken(token.key)" confirm-button-type="danger" href="#">Delete</a>)
+
+					</div>
+				</div>
+				<div class="box-footer">
+					<button ng-click="addToken()" class="btn btn-primary">Add token</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>

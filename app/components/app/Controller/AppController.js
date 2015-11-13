@@ -35,6 +35,7 @@
                     $scope.deleteToken = function(key) {
                         Apps.one($stateParams.appGuid).all('tokens').one(key).remove().then(function(data){
                             $scope.app = data;
+                            console.log($scope.app);
                             Notification.success('You have deleted a token');
                         });
                     }
