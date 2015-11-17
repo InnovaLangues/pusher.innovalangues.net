@@ -38,8 +38,8 @@
 			<h3>Client side</h3>
 			<uib-tabset class="nav-tabs-custom">
 				<uib-tab heading="Javascript">	
-<pre class="prettyprint lang-html">
-&lt;!DOCTYPE html&gt;
+
+				<pre><code class="language-javascript" prism>&lt;!DOCTYPE html&gt;
 &lt;head&gt;
   &lt;title&gt;Pusher Test&lt;/title&gt;
   &lt;script src="https://js.pusher.com/3.0/pusher.min.js"&gt;&lt;/script&gt;
@@ -59,22 +59,27 @@
       alert(data.message);
     });
   &lt;/script&gt;
-&lt;/head&gt;
-</pre>
+&lt;/head&gt;</code></pre>
+
 				</uib-tab>
-				<uib-tab heading="iOS">TODO</uib-tab>
-				<uib-tab heading="Android">TODO</uib-tab>
 			</uib-tabset>
 
 			<h3>Server side</h3>
-			<h4>PHP</h4>
-			<pre>require 'pusher'
+			<pre><code class="language-php" prism>require('Pusher.php');
 
-Pusher.url = "https://40ea804fae1295d1faf1:36e4784f3390c7f48593@api.pusherapp.com/apps/118326"
+$app_id = '118326';
+$app_key = '5b968f4a86d50f0c7df9';
+$app_secret = '1f9f41877fa3894f253c';
 
-Pusher.trigger('test_channel', 'my_event', {
-  message: 'hello world'
-})</pre>
+$pusher = new Pusher(
+  $app_key,
+  $app_secret,
+  $app_id,
+  array('encrypted' => true)
+);
+
+$data['message'] = 'hello world';
+$pusher->trigger('test_channel', 'my_event', $data);</code></pre>
 		</div>
 	</div>
 		</div>
@@ -85,27 +90,19 @@ Pusher.trigger('test_channel', 'my_event', {
 		          <h3 class="box-title"><i class="fa fa-key"></i> Access Tokens</h3>
 		        </div>
 				<div class="box-body">
-					<p>If a token becomes compromised, you can create a new key/secret pair. You will be able to delete the old token when you've updated your app.</p>
+					<p>If your token becomes compromised, you can create a new one here. You can then delete the old token when you've updated your app.</p>
 					<div ng-if="app.tokens.length > 1" class="callout callout-info">
-						<p>You have more than one active token. When you have replaced all references to the old token from your code you should delete the older token.</p>
+						<p>You have more than one token, usually one is enough. If you have created a new token, update the references in your apllication and delete the old one!</p>
 					</div>
-					<div ng-repeat="token in app.tokens">
+					<ul ng-repeat="token in app.tokens" class="products-list product-list-in-box">
+						<li class="item">
+							Token created <span am-time-ago="token.created"></span> <button ng-if="app.tokens.length > 1" mwl-confirm title="Delete token" message="Are you sure you want to delete this token ?" on-confirm="deleteToken(token.key)" confirm-button-type="danger" class="btn btn-xs btn-danger pull-right">Delete</button>
+					    	<pre class="language-javascript"><code>key = '{{token.key}}'
+secret = '{{token.secret}}'</code></pre>
 
-					<prettify target="organization">
-						<pre>
-							<code class="prettyprint lang-js">console.log('{{target.message}}');</code>
-				        </pre>
-				    </prettify>
+						</li>
 
-
-<pre class="prettyprint">
-&lt;h1&gt;gg&lt;/h1&gt;
-key = '{{token.key}}'
-secret = '{{token.secret}}'
-</pre>
-						Token created <span am-time-ago="token.created"></span> (<a ng-if="app.tokens.length > 1" mwl-confirm title="Delete token" message="Are you sure you want to delete this token ?" on-confirm="deleteToken(token.key)" confirm-button-type="danger" href="#">Delete</a>)
-
-					</div>
+					</ul>
 				</div>
 				<div class="box-footer">
 					<button ng-click="addToken()" class="btn btn-primary">Add token</button>

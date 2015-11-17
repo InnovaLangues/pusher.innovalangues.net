@@ -129,26 +129,13 @@
             }
         })
 
-        .directive('prettify', ['$compile', '$timeout', function ($compile, $timeout) {
+        .directive('prism', [function() {
             return {
-                restrict: 'E',
-                scope: {
-                    target: '='
-                },
-                link: function (scope, element, attrs) {
-                    var template = element.html();
-                    var templateFn = $compile(template);
-                    var update = function(){
-                        $timeout(function () {
-                            var compiled = templateFn(scope).html();
-                            var prettified = prettyPrintOne(compiled);
-                            element.html(prettified);
-                        }, 0);
-                    }
-                    scope.$watch('target', function () {
-                        update();
-                    }, true);
-                    update();
+                restrict: 'A',
+                link: function ($scope, element, attrs) {
+                    element.ready(function() {
+                        Prism.highlightElement(element[0]);
+                    });
                 }
             }
         }])
