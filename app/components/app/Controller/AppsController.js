@@ -8,41 +8,33 @@
 			'AppsController', 
 			[
 				'$scope', 
-				'Restangular',
 				'Notification',
-				'Apps',
+				'AppService',
 				function(
 					$scope, 
-					Restangular,
 					Notification,
-					Apps
+					AppService
 				) {
-			        var baseApps = Restangular.all('apps');
+					var promise = AppService.getApps();
 
-			        baseApps.getList().then(function(apps) {
-			          	$scope.apps = apps;
-			        });      
+					promise.then(function(result){
+						$scope.apps = result;
+						console.log($scope.apps);
+					})
 
-			        $scope.addApp = function() {
-			        	console.log($scope.slug);
-			        	var app = {
-			        		slug: $scope.slug
-			        	};
-                        Apps.post(app).then(function(data) {
-                            baseApps.getList().then(function(apps) {
-					          	$scope.apps = apps;
-					        });  
-                        	Notification.success('You have added a new app');
-                        });
+					$scope.addApp = function() {
+						AppService.addApp($scope.slug).then(function (app) {
+							$scope.apps.push(app);
+						});
+                        Notification.success('You have added a new app');
                     }
 
-                    $scope.deleteApp = function(guid) {
-                        Apps.one(guid).remove().then(function(data) {
-                        	baseApps.getList().then(function(apps) {
-					          	$scope.apps = apps;
-					        });
-                        	Notification.success('You have deleted the ' + guid + 'app');
-                        });
+                    $scope.deleteApp = function(app) {
+						AppService.deleteApp(app.guid).then(function () {
+							var index = $scope.apps.indexOf(app);
+							$scope.apps.splice(index, 1);
+						});
+                        Notification.success('You have deleted an app (' + app.slug + ')');
                     }
 			    }
 			]
