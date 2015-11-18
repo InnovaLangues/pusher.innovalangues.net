@@ -12,16 +12,35 @@
 
             return {
                 /**
-                 * Get an apps
+                 * Get an apps list
                  * @returns promise
                  */
-                getApps: function () {
+                list: function () {
 
                     var deferred = $q.defer();
 
 					Restangular.all('apps')
 			        	.getList()
 		        		.then(function (response) {
+                            deferred.resolve(response);
+                        }, function (response) {
+                            console.log("Error with status code", response.status);
+                        });
+
+                    return deferred.promise;
+                },
+
+                /**
+                 * Get an app
+                 * @returns promise
+                 */
+                get: function (guid) {
+
+                    var deferred = $q.defer();
+
+                    Apps
+                        .get(guid)
+                        .then(function (response) {
                             deferred.resolve(response);
                         }, function (response) {
                             console.log("Error with status code", response.status);
@@ -66,6 +85,27 @@
                     	.remove()
                     	.then(function(response) {
                         	deferred.resolve(response);
+                        }, function (response) {
+                            console.log("Error with status code", response.status);
+                        });
+
+                    return deferred.promise;
+                },
+
+                /**
+                 * Adds a token to a given app
+                 * @returns promise
+                 */
+                addToken: function (guid) {
+
+                    var deferred = $q.defer();
+
+                    Apps
+                        .one(guid)
+                        .all('tokens')
+                        .post()
+                        .then(function(response) {
+                            deferred.resolve(response);
                         }, function (response) {
                             console.log("Error with status code", response.status);
                         });

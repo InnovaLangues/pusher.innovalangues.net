@@ -13,23 +13,26 @@
                 'Notification',
                 'Tokens',
                 'Apps',
+                'AppService',
+                'app',
             	function(
             		$scope, 
             		$stateParams,
                     Restangular,
                     Notification,
                     Tokens,
-                    Apps
+                    Apps,
+                    AppService,
+                    app
             	) {
-                    Apps.get($stateParams.appGuid).then(function(data){
-                        $scope.app = data;
-                    });
+                    $scope.app = app;
 
                     $scope.addToken = function() {
-                        Apps.one($stateParams.appGuid).all('tokens').post().then(function(data) {
-                            $scope.app = data;
-                            Notification.success('You have added a new token');
+                        AppService.addToken($stateParams.appGuid).then(function (token) {
+                            console.log(token);
+                            $scope.app.tokens.push(token);
                         });
+                        Notification.success('You have added a new token');
                     }
 
                     $scope.deleteToken = function(key) {
