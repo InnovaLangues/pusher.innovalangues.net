@@ -27,7 +27,6 @@
 
     // Declare app level module which depends on views, and components
     angular
-
         // My App
         .module('myApp', dependencies)
 
@@ -61,12 +60,10 @@
                     // Define main state (homepage)
                     .state("main", {
                         url: "/",
-                        templateUrl: "components/authentification/Partial/login.html",
-                        controller: "LoginController"
+                        templateUrl: "components/home/Partial/home.html"
                     });
-                    
+
                 // Send 404 if page not found
-                // TODO : Sate ? 
                 $urlRouterProvider
                     .otherwise('/404');
 

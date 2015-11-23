@@ -39,8 +39,14 @@
                         Restangular.setDefaultHeaders();
                         
                         // Delete user from local storage.
-                        delete $localStorage.user.username;
-                        delete $localStorage.user
+                        if($localStorage.user) {                        
+                            if($localStorage.user.username) {
+                                delete $localStorage.user.username;
+                            }
+                            if($localStorage.user){
+                                delete $localStorage.user
+                            }
+                        }
 
                         // Change state to login.
                         $state.go('login');
@@ -73,7 +79,6 @@
                             )
                             .then(
                                 function(response) {
-
                                     // Save username
                                     $localStorage.user.username = form.username;
                                     
@@ -93,7 +98,6 @@
 
                                     // Notify the user that he has sucessfully logged in
                                     Notification.success('You have sucessfully logged in');
-
                                 },
 
                                 function(error) {

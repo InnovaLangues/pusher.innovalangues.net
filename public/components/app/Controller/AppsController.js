@@ -17,6 +17,7 @@
                     AppService,
                     apps
                 ) {
+                    console.log('apps');
                     $scope.apps = apps;
 
                     $scope.addApp = function() {

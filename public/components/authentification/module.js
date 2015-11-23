@@ -15,6 +15,13 @@
                             templateUrl: "components/authentification/Partial/login.html",
                         	controller: "LoginController"
                         }
+                    ).state(
+                        'logout', 
+                        {
+                            url: '/logout',
+                            templateUrl: "components/authentification/Partial/login.html",
+                            controller: "LogoutController"
+                        }
                     );
             }
         ]);

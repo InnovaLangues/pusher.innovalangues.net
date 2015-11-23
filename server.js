@@ -9,12 +9,12 @@ var http    = require('http'),
     app     = express();  
 
 //Setup
-app.use(express.static(__dirname + '/public'));  
+app.use(express.static(__dirname + '/app'));  
 
 console.log('Loaded dependancies');
 
 server = http.createServer(app),
-bayeux = new faye.NodeAdapter({mount: '/apps', timeout: 45});
+bayeux = new faye.NodeAdapter({mount: '/ws', timeout: 45});
 
 bayeux.attach(server);
     
@@ -131,7 +131,7 @@ bayeux.addExtension(checkIntegrity);
 
 app.get('/', function(req, res) {
 	console.log('Loading frontend');
-    res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendfile('./app/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 var port = process.env.PORT || 8001;
