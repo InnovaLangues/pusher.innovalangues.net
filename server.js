@@ -9,7 +9,7 @@ var http    = require('http'),
     app     = express();  
 
 //Setup
-app.use(express.static(__dirname + '/app'));  
+app.use(express.static(__dirname + '/public'));  
 
 console.log('Loaded dependancies');
 
@@ -131,7 +131,7 @@ bayeux.addExtension(checkIntegrity);
 
 app.get('/', function(req, res) {
 	console.log('Loading frontend');
-    res.sendfile('./app/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 var port = process.env.PORT || 8001;
