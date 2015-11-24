@@ -18,11 +18,11 @@
                         url: "",
                         templateUrl: "components/app/Partial/apps.list.html",
                         controller: "AppsController",
-                        /*resolve: {
+                        resolve: {
                             apps: function(AppService) {
                                 return AppService.list();
                             }
-                        },*/
+                        },
                         data: {
                             permissions: {
                                 except: ['anonymous'],
@@ -36,11 +36,11 @@
                         url: "/{appGuid}",
                         templateUrl: "components/app/Partial/apps.detail.html",
                         controller: "AppController",
-                        /*resolve: {
+                        resolve: {
                             app: function($stateParams, AppService) {
                                 return AppService.get($stateParams.appGuid);
                             }
-                        },*/
+                        },
                         data: {
                             permissions: {
                                 except: ['anonymous'],

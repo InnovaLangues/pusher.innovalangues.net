@@ -1,4 +1,4 @@
-console.log('Starting application');
+//console.log('Starting application');
 
 var http    = require('http'),
     faye    = require('faye'),
@@ -11,126 +11,149 @@ var http    = require('http'),
 //Setup
 app.use(express.static(__dirname + '/public'));  
 
-console.log('Loaded dependancies');
+//console.log('Loaded dependancies');
 
 server = http.createServer(app),
 bayeux = new faye.NodeAdapter({mount: '/ws', timeout: 45});
 
 bayeux.attach(server);
-    
+
 var checkIntegrity = {
-  incoming: function(message, req, callback) {
+    incoming: function(message, req, callback) {
 
-  	console.log('Checking data integrity');
+        segment = message.channel.split('/');
 
-  	var url = req.url
+        if(segment[1] === 'meta') {
+            //console.log('META Message recieved');
+            callback(message);
+        } else {
+            console.log("Incomming message on channel : " + message.channel);
+            //console.log('NON META Message recieved');
 
-    console.log('Requested URL : ' + url);
+            console.log('Checking data integrity');
 
-  	var pathArray = url.split("?");
-  	var basePath = pathArray[0];
+            var url = req.url
 
-    console.log('Base path : ' +  pathArray[0]);
-    
-  	var paramString = pathArray[1];
+            console.log('Requested URL : ' + url);
 
-    console.log('Parameters : ' +  pathArray[1]);
+            var pathArray = url.split("?");
+            var basePath = pathArray[0];
 
-  	var params = parseQueryString(paramString);
-  	var timestamp = params['timestamp'];
+            console.log('Base path : ' +  pathArray[0]);
+            
+            var paramString = pathArray[1];
 
-  	console.log('Timestamp : ' + timestamp);
+            //console.log('Parameters : ' +  pathArray[1]);
 
-  	var hash = params['hash'];
+            var params = parseQueryString(paramString);
+            var timestamp = params['timestamp'];
 
-  	console.log('Body md5 hash : ' + hash);
+            //console.log('Timestamp : ' + timestamp);
 
-  	var key = params['key'];
+            var hash = params['hash'];
 
-  	console.log('Key : ' + key);
+            //console.log('Body md5 hash : ' + hash);
 
-  	var signature = params['signature'];
+            var key = params['key'];
 
-  	console.log('Signature : ' + signature);
+            //console.log('Key : ' + key);
 
-  	var appId = basePath.split("/")[2];
+            var signature = params['signature'];
 
-  	console.log('App ID : ' + appId);
+            //console.log('Signature : ' + signature);
 
-    //Check timestamp
-    var now = Date.now() / 1000 | 0;
-    var timeDiff = now - timestamp;
-    if (timeDiff > 600) {
-    	console.log('Timestamp expired');
-    	message.error = 'Timestamp expired';
-    } else {
-    	console.log('Timestamp OK');	
+            var appId = basePath.split("/")[2];
+
+            //console.log('App ID : ' + appId);
+
+            //Check timestamp
+            var now = Date.now() / 1000 | 0;
+
+            var timeDiff = now - timestamp;
+
+            if (timeDiff > 600) {
+                //console.log('Timestamp expired');
+                message.error = 'Timestamp expired';
+            } else {
+                //console.log('Timestamp OK');  
+            }
+
+            var apiUrl = 'http://api.innovalangues.loc/api/v1';
+
+            //console.log(appId);
+
+            request(
+                apiUrl + '/apps/' + appId, 
+                function (error, response, body) {
+                    var apiApp = null;
+            
+                    if (!error && response.statusCode == 200) {
+                        //console.log('Returned body from API : ' + body);
+
+                        apiApp = JSON.parse(body, true);
+
+                        var apiTokens = apiApp.tokens.filter(
+                            function(token) {
+                                return token.key == key;
+                            }
+                        )
+                    }
+
+                    var apiToken = apiTokens[0];
+
+                    if (apiToken) {
+
+                        if (key !== apiToken.key) {
+                            //console.log('Invalid key : ' + key + ' != ' + apiToken.key);
+                            message.error = 'Invalid key';
+                        }
+
+                        if (parseInt(apiApp.id) !== parseInt(appId)) {
+                            //console.log('Invalid app id : ' + parseInt(apiApp.id) + ' != ' + parseInt(appId));
+                            message.error = 'Invalid app id';
+                        }
+
+                        var stringToSign = req.method + "\n" + basePath + "\n" + "key=" + key + "&timestamp=" + timestamp;
+
+                        //console.log("String to sign : \n" + stringToSign + "\n");
+
+                        var hmac = null;
+                        hmac = crypto.createHmac('sha256', apiToken.secret).update(stringToSign).digest('hex')
+
+                        if (signature !== hmac) {
+                            //console.log("Invalid Signature : \n" + signature + "!=\n" + hmac);
+                            message.error = 'Invalid Signature';
+                        }
+
+                        if (hash !== md5(req.body)) {
+                            //console.log('Invalid hash');
+                            message.error = 'Invalid hash';
+                        }
+
+                        if(message.error) {
+                            console.log(message.error);
+                        } else {
+                            console.log('Everything is OK, sending the message!');
+                        }
+                        callback(message);
+
+                    } else {
+                        //console.log('Token not found');
+                        message.error = 'Token not found';
+                        callback(message);
+                    }   
+                }
+            )
+            
+        }
     }
-
-	request('http://localhost:3000/apps/1', function (error, response, body) {
-	    var apiApp = null;
-		
-	  	if (!error && response.statusCode == 200) {
-	    	console.log('Returned body from API : ' + body);
-
-	    	apiApp = JSON.parse(body, true);
-
-	    	var apiTokens = apiApp.tokens.filter(function(token) {
-			    return token.key == key;
-			});
-
-			var apiToken = apiTokens[0];
-
-			if (apiToken) {
-
-			  	if (key !== apiToken.key) {
-			    	console.log('Invalid key : ' + key + ' != ' + apiToken.key);
-			    	message.error = 'Invalid key';
-			    }
-
-			    if (parseInt(apiApp.id) !== parseInt(appId)) {
-			    	console.log('Invalid app id : ' + parseInt(apiApp.id) + ' != ' + parseInt(appId));
-			    	message.error = 'Invalid app id';
-			    }
-
-			    var stringToSign = req.method + "\n" + basePath + "\n" + "key=" + key + "&timestamp=" + timestamp;
-
-			    console.log("String to sign : \n" + stringToSign + "\n");
-			    
-			    var hmac = null;
-			    hmac = crypto.createHmac('sha256', apiToken.secret).update(stringToSign).digest('hex')
-
-			    if (signature !== hmac) {
-			    	console.log("Invalid Signature : \n" + signature + "!=\n" + hmac);
-			    	message.error = 'Invalid Signature';
-			    }
-
-			    if (hash !== md5(req.body)) {
-			    	console.log('Invalid hash');
-			    	message.error = 'Invalid hash';
-			    }
-
-			    console.log('Everything is OK, sending the message!');
-
-			} else {
-				console.log('Token not found');
-				message.error = 'Token not found';
-			}
-
-	    	callback(message);
-	  	} else {
-			message.error = error;
-			console.log(error);
-			callback(message);
-	  	}
-	});
-  }
+  
 };
 
 bayeux.addExtension(checkIntegrity);
 
 app.get('/', function(req, res) {
-	console.log('Loading frontend');
+    console.log('Loading frontend');
     res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 

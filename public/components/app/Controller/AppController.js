@@ -29,7 +29,6 @@
 
                     $scope.addToken = function() {
                         AppService.addToken($stateParams.appGuid).then(function (token) {
-                            console.log(token);
                             $scope.app.tokens.push(token);
                         });
                         Notification.success('You have added a new token');
@@ -38,7 +37,6 @@
                     $scope.deleteToken = function(key) {
                         Apps.one($stateParams.appGuid).all('tokens').one(key).remove().then(function(data){
                             $scope.app = data;
-                            console.log($scope.app);
                             Notification.success('You have deleted a token');
                         });
                     }
