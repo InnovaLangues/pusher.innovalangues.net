@@ -51,7 +51,7 @@
             ) {
                 $stateProvider
                     // Define main state (homepage)
-                    .state("main", {
+                    .state("home", {
                         url: "/",
                         templateUrl: "components/home/Partial/home.html"
                     });
