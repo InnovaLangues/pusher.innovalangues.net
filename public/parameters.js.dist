@@ -1,8 +1,16 @@
-angular.module('myApp.config')
-.constant('myConfig', {
-    'appName' : 'My App',
-    'backendUrl': 'http://api.innovalangues.net/api/v1',
-    'oAuthTokenUrl': 'http://api.innovalangues.net/oauth/v2/token',
-    'oAuthClientId': '1_501b6mmf3008ccsococco4c8w8k0s04kw0w0o4kc4kgk0ssgc8',
-    'oAuthClientSecret': '2978ssmr1ihwo4000g8s0o4s48gkw0w48c8wcokgog0scg4s8w'
-})
+(function() {
+    'use strict';
+
+    angular
+    	.module('myApp.config', [])
+	    .constant(
+            'myConfig', 
+            {
+			    'appName' : 'My App',
+			    'backendUrl': 'http://api.innovalangues.net/api/v1',
+			    'oAuthTokenUrl': 'http://api.innovalangues.net/oauth/v2/token',
+			    'oAuthClientId': '1_3l53ylm3zfokgkosswkoswok4sw4w0g8ogss0go4wckwc44w0c',
+			    'oAuthClientSecret': '1vu14wqn7wcgsg4cg804ws8cw4k008kwsokcc4kk0kgsskocko'
+			}
+	    );
+})();
