@@ -21,14 +21,14 @@ bayeux.attach(server);
 var checkIntegrity = {
     incoming: function(message, req, callback) {
 
-        segment = message.channel.split('/');
+        var segments = message.channel.split('/');
 
-        if(segment[1] === 'meta') {
-            //console.log('META Message recieved');
+        if(segments[1] === 'meta') {
+            console.log('META Message recieved');
             callback(message);
         } else {
-            console.log("Incomming message on channel : " + message.channel);
-            //console.log('NON META Message recieved');
+            console.log("\nIncomming message on channel : " + message.channel);
+            console.log('NON META Message recieved');
 
             console.log('Checking data integrity');
 
@@ -43,12 +43,12 @@ var checkIntegrity = {
             
             var paramString = pathArray[1];
 
-            //console.log('Parameters : ' +  pathArray[1]);
+            console.log('Parameters : ' +  pathArray[1]);
 
             var params = parseQueryString(paramString);
             var timestamp = params['timestamp'];
 
-            //console.log('Timestamp : ' + timestamp);
+            console.log('Timestamp : ' + timestamp);
 
             var hash = params['hash'];
 
@@ -72,13 +72,13 @@ var checkIntegrity = {
             var timeDiff = now - timestamp;
 
             if (timeDiff > 600) {
-                //console.log('Timestamp expired');
+                console.log('Timestamp expired');
                 message.error = 'Timestamp expired';
             } else {
-                //console.log('Timestamp OK');  
+                console.log('Timestamp OK');  
             }
 
-            var apiUrl = 'http://api.innovalangues.loc/api/v1';
+            var apiUrl = 'http://api.innovalangues.net/api/v1';
 
             //console.log(appId);
 
@@ -88,15 +88,24 @@ var checkIntegrity = {
                     var apiApp = null;
             
                     if (!error && response.statusCode == 200) {
-                        //console.log('Returned body from API : ' + body);
+                        console.log('Returned body from API : ' + body);
 
                         apiApp = JSON.parse(body, true);
 
-                        var apiTokens = apiApp.tokens.filter(
-                            function(token) {
-                                return token.key == key;
-                            }
-                        )
+                        console.log(apiApp);
+
+
+
+                        if(apiApp.tokens.length()) { 
+                            var apiTokens = apiApp.tokens.filter(
+                                function(token) {
+                                    return token.key == key;
+                                }
+                            )
+                        } else {
+                            message.error = 'Token not found';
+                        }
+
                     }
 
                     var apiToken = apiTokens[0];
@@ -133,8 +142,11 @@ var checkIntegrity = {
                         if(message.error) {
                             console.log(message.error);
                         } else {
-                            console.log('Everything is OK, sending the message!');
+                            segments[1] = apiToken.key;
+                            message.channel = segments.join('/');
+                            console.log('Everything is OK, sending the message to : ' + message.channel);
                         }
+
                         callback(message);
 
                     } else {
@@ -150,7 +162,7 @@ var checkIntegrity = {
   
 };
 
-bayeux.addExtension(checkIntegrity);
+//bayeux.addExtension(checkIntegrity);
 
 app.get('/', function(req, res) {
     console.log('Loading frontend');

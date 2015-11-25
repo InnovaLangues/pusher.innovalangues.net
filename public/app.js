@@ -3,6 +3,7 @@
 
     var dependencies = [
         // App specific
+        'myApp.config',
         'myApp.header',
         'myApp.sidebar',
         'myApp.footer',
@@ -29,14 +30,6 @@
     angular
         // My App
         .module('myApp', dependencies)
-
-        .constant('myConfig', {
-            'appName' : 'My App',
-            'backendUrl': 'http://api.innovalangues.loc/api/v1',
-            'oAuthTokenUrl': 'http://api.innovalangues.loc/oauth/v2/token',
-            'oAuthClientId': '1_501b6mmf3008ccsococco4c8w8k0s04kw0w0o4kc4kgk0ssgc8',
-            'oAuthClientSecret': '2978ssmr1ihwo4000g8s0o4s48gkw0w48c8wcokgog0scg4s8w'
-        })
 
         // Config
         .config([

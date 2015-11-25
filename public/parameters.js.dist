@@ -1,0 +1,8 @@
+angular.module('myApp.config')
+.constant('myConfig', {
+    'appName' : 'My App',
+    'backendUrl': 'http://api.innovalangues.net/api/v1',
+    'oAuthTokenUrl': 'http://api.innovalangues.net/oauth/v2/token',
+    'oAuthClientId': '1_501b6mmf3008ccsococco4c8w8k0s04kw0w0o4kc4kgk0ssgc8',
+    'oAuthClientSecret': '2978ssmr1ihwo4000g8s0o4s48gkw0w48c8wcokgog0scg4s8w'
+})
